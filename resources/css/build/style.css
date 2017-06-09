@@ -1,0 +1,45 @@
+body div.bg {
+  width: 500px;
+  height: 500px;
+  background-color: #bbada0;
+}
+body div.tile {
+  width: 100px;
+  height: 100px;
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+}
+body div .tile-2 {
+  background: #eee4da;
+}
+body div .tile-4 {
+  background: #ede0c8;
+}
+body div .tile-8 {
+  background: #f2b179;
+}
+body div .tile-16 {
+  background: #f59563;
+}
+body div .tile-32 {
+  background: #f67c5f;
+}
+body div .tile-64 {
+  background: #f65e3b;
+}
+body div .tile-128 {
+  background: #edcf72;
+}
+body div .tile-256 {
+  background: #edcc61;
+}
+body div .tile-512 {
+  background: #edc850;
+}
+body div .tile-1024 {
+  background: #edc53f;
+}
+body div .tile-2048 {
+  background: #edc22e;
+}
