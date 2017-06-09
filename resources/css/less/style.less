@@ -16,10 +16,94 @@ body {
 
   div {
 
-    &.bg {
-      width: 500px;
+    &.cb {
+      clear: both;
+    }
+
+    &.square-bg {
       height: 500px;
+      width: 500px;
+      margin: auto;
+      display: block;
       background-color: @bg-colour;
+    }
+
+    &.bg-wrapper {
+      height: 500px;
+      width: 500px;
+      text-align: center;
+      margin: auto;
+      position: relative;
+      display: block;
+
+      .bg {
+        height: 100%;
+        width: calc(100% * 0.57735);
+        display: inline-block;
+        background-color: @bg-colour;
+      }
+
+      .bg:before {
+        position: absolute;
+        top: 0;
+        right: calc((100% / 2) - ((100% * 0.57735) / 2));
+        background-color: inherit;
+        height: inherit;
+        width: inherit;
+        content: "";
+        transform: rotateZ(60deg);
+      }
+
+      .bg:after {
+        position: absolute;
+        top: 0;
+        right: calc((100% / 2) - ((100% * 0.57735) / 2));
+        background-color: inherit;
+        height: inherit;
+        width: inherit;
+        content: "";
+        transform: rotateZ(-60deg);
+      }
+    }
+
+    &.grid {
+      padding-top: 20px;
+      padding-bottom: 20px;
+
+      .grid-row {
+        clear: both;
+
+        &:first-child, &:last-child {
+          -webkit-transform: translate(145px, 0px);
+          -moz-transform: translate(145px, 0px);
+          transform: translate(145px, 0px);
+        }
+
+        &:nth-child(2), &:nth-last-child(2) {
+          -webkit-transform: translate(90px, 0px);
+          -moz-transform: translate(90px, 0px);
+          transform: translate(90px, 0px);
+        }
+        &:nth-child(3) {
+          -webkit-transform: translate(35px, 0px);
+          -moz-transform: translate(35px, 0px);
+          transform: translate(35px, 0px);
+        }
+      }
+
+      .empty-tile {
+        width: 100px;
+        height: 100px;
+        float: left;
+        -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+        background-color: @empty-colour;
+
+        &:not(:last-child) {
+          margin-right: 10px;
+        }
+      }
     }
 
     &.tile {
