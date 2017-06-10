@@ -214,6 +214,12 @@ var GameState = function () {
                 case _constants.Direction.UP_LEFT:
                     this._shiftUpLeft();
                     break;
+                case _constants.Direction.DOWN_LEFT:
+                    this._shiftDownLeft();
+                    break;
+                case _constants.Direction.UP_RIGHT:
+                    this._shiftUpRight();
+                    break;
                 default:
                     console.error('Invalid direction: ' + direction);
                     break;
@@ -285,25 +291,7 @@ var GameState = function () {
         value: function _shiftDownRight() {
             for (var i = 0; i < _constants.MAIN_DIAGONAL.length; ++i) {
                 var row = _constants.MAIN_DIAGONAL[i];
-                for (var j = row.length - 2; j >= 0; --j) {
-                    var position = row[j];
-                    var tile = this.grid[position.row][position.column];
-                    if (!!tile) {
-                        var endPositionIndex = j;
-                        // move on diagonal if there is no tile, up to end
-                        while (endPositionIndex + 1 < row.length && !this.grid[row[endPositionIndex + 1].row][row[endPositionIndex + 1].column]) {
-                            ++endPositionIndex;
-                        }
-                        if (tile.compare(row[endPositionIndex])) {
-                            // while was not called, thus tile should not be shifted
-                            continue;
-                        }
-                        var endPosition = row[endPositionIndex];
-                        this.grid[endPosition.row][endPosition.column] = tile;
-                        this.grid[position.row][position.column] = null;
-                        tile.moveToPosition(false, endPosition.row, endPosition.column);
-                    }
-                }
+                this.__shiftDiagonalDown(i, row);
             }
         }
     }, {
@@ -311,22 +299,66 @@ var GameState = function () {
         value: function _shiftUpLeft() {
             for (var i = 0; i < _constants.MAIN_DIAGONAL.length; ++i) {
                 var row = _constants.MAIN_DIAGONAL[i];
-                for (var j = 1; j < row.length; ++j) {
-                    var position = row[j];
-                    var tile = this.grid[position.row][position.column];
-                    if (!!tile) {
-                        var endPositionIndex = j;
-                        while (endPositionIndex - 1 >= 0 && !this.grid[row[endPositionIndex - 1].row][row[endPositionIndex - 1].column]) {
-                            --endPositionIndex;
-                        }
-                        if (tile.compare(row[endPositionIndex])) {
-                            continue;
-                        }
-                        var endPosition = row[endPositionIndex];
-                        this.grid[endPosition.row][endPosition.column] = tile;
-                        this.grid[position.row][position.column] = null;
-                        tile.moveToPosition(false, endPosition.row, endPosition.column);
+                this.__shiftDiagonalUp(i, row);
+            }
+        }
+    }, {
+        key: '_shiftDownLeft',
+        value: function _shiftDownLeft() {
+            for (var i = 0; i < _constants.ANTI_DIAGONAL.length; ++i) {
+                var row = _constants.ANTI_DIAGONAL[i];
+                this.__shiftDiagonalDown(i, row);
+            }
+        }
+    }, {
+        key: '_shiftUpRight',
+        value: function _shiftUpRight() {
+            for (var i = 0; i < _constants.ANTI_DIAGONAL.length; ++i) {
+                var row = _constants.ANTI_DIAGONAL[i];
+                this.__shiftDiagonalUp(i, row);
+            }
+        }
+    }, {
+        key: '__shiftDiagonalUp',
+        value: function __shiftDiagonalUp(i, row) {
+            for (var j = 1; j < row.length; ++j) {
+                var position = row[j];
+                var tile = this.grid[position.row][position.column];
+                if (!!tile) {
+                    var endPositionIndex = j;
+                    while (endPositionIndex - 1 >= 0 && !this.grid[row[endPositionIndex - 1].row][row[endPositionIndex - 1].column]) {
+                        --endPositionIndex;
                     }
+                    if (tile.compare(row[endPositionIndex])) {
+                        continue;
+                    }
+                    var endPosition = row[endPositionIndex];
+                    this.grid[endPosition.row][endPosition.column] = tile;
+                    this.grid[position.row][position.column] = null;
+                    tile.moveToPosition(false, endPosition.row, endPosition.column);
+                }
+            }
+        }
+    }, {
+        key: '__shiftDiagonalDown',
+        value: function __shiftDiagonalDown(i, row) {
+            for (var j = row.length - 2; j >= 0; --j) {
+                var position = row[j];
+                var tile = this.grid[position.row][position.column];
+                if (!!tile) {
+                    var endPositionIndex = j;
+                    // move on diagonal if there is no tile, up to end
+                    while (endPositionIndex + 1 < row.length && !this.grid[row[endPositionIndex + 1].row][row[endPositionIndex + 1].column]) {
+                        ++endPositionIndex;
+                    }
+                    if (tile.compare(row[endPositionIndex])) {
+                        // while was not called, thus tile should not be shifted
+                        continue;
+                    }
+                    var endPosition = row[endPositionIndex];
+                    this.grid[endPosition.row][endPosition.column] = tile;
+                    this.grid[position.row][position.column] = null;
+                    tile.moveToPosition(false, endPosition.row, endPosition.column);
                 }
             }
         }
