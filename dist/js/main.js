@@ -143,13 +143,13 @@ var GameState = function () {
     function GameState() {
         _classCallCheck(this, GameState);
 
-        this._emptyGrid();
+        this._deleteTiles();
     }
 
     _createClass(GameState, [{
         key: 'newGame',
         value: function newGame() {
-            this._emptyGrid();
+            this._deleteTiles();
             for (var i = 0; i < 2; ++i) {
                 var position = GameState._randomPosition();
                 while (!!this.getTile(position)) {
@@ -161,9 +161,16 @@ var GameState = function () {
             console.log('New game', this.grid);
         }
     }, {
-        key: '_emptyGrid',
-        value: function _emptyGrid() {
+        key: '_deleteTiles',
+        value: function _deleteTiles() {
             this.grid = [[], [], [], [], []];
+            var overlay = document.querySelector('.tile-overlay');
+            var tiles = document.querySelectorAll('.tile');
+            if (!!tiles) {
+                tiles.forEach(function (tile) {
+                    return overlay.removeChild(tile);
+                });
+            }
         }
     }, {
         key: 'getTile',
@@ -215,23 +222,40 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Ondřej Kratochvíl on 10.6.17.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+
+
 var _Position = __webpack_require__(0);
 
 var _Position2 = _interopRequireDefault(_Position);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } /**
-                                                                                                                                                           * Created by Ondřej Kratochvíl on 10.6.17.
-                                                                                                                                                           */
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var Tile = function () {
+    function Tile(value, position) {
+        _classCallCheck(this, Tile);
 
-var Tile = function Tile(value, position) {
-    _classCallCheck(this, Tile);
+        this.value = value;
+        this.position = position;
+        this._renderTile();
+    }
 
-    this.value = value;
-    this.position = position;
-};
+    _createClass(Tile, [{
+        key: '_renderTile',
+        value: function _renderTile() {
+            var element = document.createElement('div');
+            element.appendChild(document.createTextNode(this.value));
+            element.classList.add('tile', 'tile-' + this.value);
+            document.querySelector('.tile-overlay').appendChild(element);
+        }
+    }]);
+
+    return Tile;
+}();
 
 exports.default = Tile;
 

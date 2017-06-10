@@ -8,11 +8,11 @@ import {NEW_TILE_VALUE} from './constants';
 export default class GameState {
 
     constructor() {
-        this._emptyGrid();
+        this._deleteTiles();
     }
 
     newGame() {
-        this._emptyGrid();
+        this._deleteTiles();
         for (let i = 0; i < 2; ++i) {
             let position = GameState._randomPosition();
             while (!!this.getTile(position)) {    // if a tile was already generated on the position
@@ -23,7 +23,7 @@ export default class GameState {
         console.log('New game', this.grid);
     }
 
-    _emptyGrid() {
+    _deleteTiles() {
         this.grid = [
             [],
             [],
@@ -31,6 +31,11 @@ export default class GameState {
             [],
             []
         ];
+        const overlay = document.querySelector('.tile-overlay');
+        const tiles = document.querySelectorAll('.tile');
+        if (!!tiles) {
+            tiles.forEach(tile => overlay.removeChild(tile));
+        }
     }
 
     getTile(position) {
