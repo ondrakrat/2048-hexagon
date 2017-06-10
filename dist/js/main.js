@@ -125,6 +125,36 @@ exports.default = Position;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.ANTI_DIAGONAL = exports.MAIN_DIAGONAL = exports.Direction = exports.NEW_TILE_VALUE = undefined;
+
+var _Position = __webpack_require__(0);
+
+var _Position2 = _interopRequireDefault(_Position);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var NEW_TILE_VALUE = exports.NEW_TILE_VALUE = 2;
+var Direction = exports.Direction = {
+    LEFT: Symbol('LEFT'),
+    RIGHT: Symbol('RIGHT'),
+    UP_LEFT: Symbol('UP_LEFT'),
+    UP_RIGHT: Symbol('UP_RIGHT'),
+    DOWN_LEFT: Symbol('DOWN_LEFT'),
+    DOWN_RIGHT: Symbol('DOWN_RIGHT')
+};
+var MAIN_DIAGONAL = exports.MAIN_DIAGONAL = [[new _Position2.default(0, 1), new _Position2.default(1, 2), new _Position2.default(2, 3)], [new _Position2.default(0, 0), new _Position2.default(1, 1), new _Position2.default(2, 2), new _Position2.default(3, 2)], [new _Position2.default(1, 0), new _Position2.default(2, 1), new _Position2.default(3, 1), new _Position2.default(4, 1)], [new _Position2.default(2, 0), new _Position2.default(3, 0), new _Position2.default(4, 0)]];
+var ANTI_DIAGONAL = exports.ANTI_DIAGONAL = [[new _Position2.default(0, 0), new _Position2.default(1, 0), new _Position2.default(2, 0)], [new _Position2.default(0, 1), new _Position2.default(1, 1), new _Position2.default(2, 1), new _Position2.default(3, 0)], [new _Position2.default(1, 2), new _Position2.default(2, 2), new _Position2.default(3, 1), new _Position2.default(4, 0)], [new _Position2.default(2, 3), new _Position2.default(3, 2), new _Position2.default(4, 1)]];
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * Created by Ondřej Kratochvíl on 10.6.17.
@@ -135,11 +165,11 @@ var _Position = __webpack_require__(0);
 
 var _Position2 = _interopRequireDefault(_Position);
 
-var _Tile = __webpack_require__(2);
+var _Tile = __webpack_require__(3);
 
 var _Tile2 = _interopRequireDefault(_Tile);
 
-var _constants = __webpack_require__(3);
+var _constants = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -169,42 +199,24 @@ var GameState = function () {
             this.started = true;
         }
     }, {
-        key: 'shiftLeft',
-        value: function shiftLeft() {
-            for (var i = 0; i < this.grid.length; ++i) {
-                var row = this.grid[i];
-                for (var j = 1; j < row.length; ++j) {
-                    if (!!row[j]) {
-                        var tile = row[j];
-                        var endPosition = j;
-                        while (endPosition - 1 >= 0 && !row[endPosition - 1]) {
-                            --endPosition;
-                        }
-                        row[endPosition] = tile;
-                        row[j] = null;
-                        tile.moveToPosition(false, i, endPosition);
-                    }
-                }
-            }
-        }
-    }, {
-        key: 'shiftRight',
-        value: function shiftRight() {
-            for (var i = 0; i < this.grid.length; ++i) {
-                var row = this.grid[i];
-                for (var j = row.length - 2; j >= 0; --j) {
-                    if (!!row[j]) {
-                        var tile = row[j];
-                        var endPosition = j;
-                        while (endPosition + 1 < row.length && !row[endPosition + 1]) {
-                            ++endPosition;
-                        }
-                        row[endPosition] = tile;
-                        row[j] = null;
-                        console.log('moving from position ' + tile.position.row + ' ' + tile.position.column + ' to position ' + i + ' ' + endPosition);
-                        tile.moveToPosition(false, i, endPosition);
-                    }
-                }
+        key: 'handleMove',
+        value: function handleMove(direction) {
+            switch (direction) {
+                case _constants.Direction.LEFT:
+                    this._shiftLeft();
+                    break;
+                case _constants.Direction.RIGHT:
+                    this._shiftRight();
+                    break;
+                case _constants.Direction.DOWN_RIGHT:
+                    this._shiftDownRight();
+                    break;
+                case _constants.Direction.UP_LEFT:
+                    this._shiftUpLeft();
+                    break;
+                default:
+                    console.error('Invalid direction: ' + direction);
+                    break;
             }
         }
     }, {
@@ -216,6 +228,107 @@ var GameState = function () {
         key: 'setTile',
         value: function setTile(position, tile) {
             this.grid[position.row][position.column] = tile;
+        }
+    }, {
+        key: '_shiftLeft',
+        value: function _shiftLeft() {
+            for (var i = 0; i < this.grid.length; ++i) {
+                var row = this.grid[i];
+                for (var j = 1; j < row.length; ++j) {
+                    var tile = row[j];
+                    if (!!tile) {
+                        // if there is a tile
+                        var _tile = row[j];
+                        var endPosition = j;
+                        // move until next tile is encountered, up to start
+                        while (endPosition - 1 >= 0 && !row[endPosition - 1]) {
+                            --endPosition;
+                        }
+                        if (_tile.compare(new _Position2.default(i, endPosition))) {
+                            // while was not called, thus tile should not be shifted
+                            continue;
+                        }
+                        row[endPosition] = _tile;
+                        row[j] = null;
+                        _tile.moveToPosition(false, i, endPosition);
+                    }
+                }
+            }
+        }
+    }, {
+        key: '_shiftRight',
+        value: function _shiftRight() {
+            for (var i = 0; i < this.grid.length; ++i) {
+                var row = this.grid[i];
+                for (var j = row.length - 2; j >= 0; --j) {
+                    var tile = row[j];
+                    if (!!tile) {
+                        // if there is a tile
+                        var endPosition = j;
+                        // move until next tile is encountered, up to end
+                        while (endPosition + 1 < row.length && !row[endPosition + 1]) {
+                            ++endPosition;
+                        }
+                        if (tile.compare(new _Position2.default(i, endPosition))) {
+                            // while was not called, thus tile should not be shifted
+                            continue;
+                        }
+                        row[endPosition] = tile;
+                        row[j] = null;
+                        tile.moveToPosition(false, i, endPosition);
+                    }
+                }
+            }
+        }
+    }, {
+        key: '_shiftDownRight',
+        value: function _shiftDownRight() {
+            for (var i = 0; i < _constants.MAIN_DIAGONAL.length; ++i) {
+                var row = _constants.MAIN_DIAGONAL[i];
+                for (var j = row.length - 2; j >= 0; --j) {
+                    var position = row[j];
+                    var tile = this.grid[position.row][position.column];
+                    if (!!tile) {
+                        var endPositionIndex = j;
+                        // move on diagonal if there is no tile, up to end
+                        while (endPositionIndex + 1 < row.length && !this.grid[row[endPositionIndex + 1].row][row[endPositionIndex + 1].column]) {
+                            ++endPositionIndex;
+                        }
+                        if (tile.compare(row[endPositionIndex])) {
+                            // while was not called, thus tile should not be shifted
+                            continue;
+                        }
+                        var endPosition = row[endPositionIndex];
+                        this.grid[endPosition.row][endPosition.column] = tile;
+                        this.grid[position.row][position.column] = null;
+                        tile.moveToPosition(false, endPosition.row, endPosition.column);
+                    }
+                }
+            }
+        }
+    }, {
+        key: '_shiftUpLeft',
+        value: function _shiftUpLeft() {
+            for (var i = 0; i < _constants.MAIN_DIAGONAL.length; ++i) {
+                var row = _constants.MAIN_DIAGONAL[i];
+                for (var j = 1; j < row.length; ++j) {
+                    var position = row[j];
+                    var tile = this.grid[position.row][position.column];
+                    if (!!tile) {
+                        var endPositionIndex = j;
+                        while (endPositionIndex - 1 >= 0 && !this.grid[row[endPositionIndex - 1].row][row[endPositionIndex - 1].column]) {
+                            --endPositionIndex;
+                        }
+                        if (tile.compare(row[endPositionIndex])) {
+                            continue;
+                        }
+                        var endPosition = row[endPositionIndex];
+                        this.grid[endPosition.row][endPosition.column] = tile;
+                        this.grid[position.row][position.column] = null;
+                        tile.moveToPosition(false, endPosition.row, endPosition.column);
+                    }
+                }
+            }
         }
     }, {
         key: '_deleteTiles',
@@ -248,6 +361,7 @@ var GameState = function () {
                     break;
                 default:
                     console.error('Invalid row index: ' + row);
+                    return null;
             }
             return new _Position2.default(row, column);
         }
@@ -259,7 +373,7 @@ var GameState = function () {
 exports.default = GameState;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -305,6 +419,11 @@ var Tile = function () {
             this.element.style.left = gridRect.left + 'px';
         }
     }, {
+        key: 'compare',
+        value: function compare(position) {
+            return this.position.row === position.row && this.position.column === position.column;
+        }
+    }, {
         key: '_renderTile',
         value: function _renderTile() {
             this.element = document.createElement('div');
@@ -321,27 +440,17 @@ var Tile = function () {
 exports.default = Tile;
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var NEW_TILE_VALUE = exports.NEW_TILE_VALUE = 2;
-
-/***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _GameState = __webpack_require__(1);
+var _GameState = __webpack_require__(2);
 
 var _GameState2 = _interopRequireDefault(_GameState);
+
+var _constants = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -359,13 +468,23 @@ document.onkeypress = function (e) {
         return;
     }
     switch (e.code) {
+        case 'Numpad1':
+            game.handleMove(_constants.Direction.DOWN_LEFT);
+            break;
+        case 'Numpad3':
+            game.handleMove(_constants.Direction.DOWN_RIGHT);
+            break;
         case 'Numpad4':
-            // move left
-            game.shiftLeft();
+            game.handleMove(_constants.Direction.LEFT);
             break;
         case 'Numpad6':
-            // move right
-            game.shiftRight();
+            game.handleMove(_constants.Direction.RIGHT);
+            break;
+        case 'Numpad7':
+            game.handleMove(_constants.Direction.UP_LEFT);
+            break;
+        case 'Numpad9':
+            game.handleMove(_constants.Direction.UP_RIGHT);
             break;
     }
 };

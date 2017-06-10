@@ -1,4 +1,5 @@
 import GameState from './GameState';
+import {Direction} from "./constants";
 
 const game = new GameState();
 
@@ -14,11 +15,23 @@ document.onkeypress = (e) => {
         return;
     }
     switch (e.code) {
-        case 'Numpad4':   // move left
-            game.shiftLeft();
+        case 'Numpad1':
+            game.handleMove(Direction.DOWN_LEFT);
             break;
-        case 'Numpad6':   // move right
-            game.shiftRight();
+        case 'Numpad3':
+            game.handleMove(Direction.DOWN_RIGHT);
+            break;
+        case 'Numpad4':
+            game.handleMove(Direction.LEFT);
+            break;
+        case 'Numpad6':
+            game.handleMove(Direction.RIGHT);
+            break;
+        case 'Numpad7':
+            game.handleMove(Direction.UP_LEFT);
+            break;
+        case 'Numpad9':
+            game.handleMove(Direction.UP_RIGHT);
             break;
     }
 };

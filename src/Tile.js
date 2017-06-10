@@ -23,6 +23,10 @@ export default class Tile {
         this.element.style.left = `${gridRect.left}px`;
     }
 
+    compare(position) {
+        return this.position.row === position.row && this.position.column === position.column;
+    }
+
     _renderTile() {
         this.element = document.createElement('div');
         this.element.appendChild(document.createTextNode(this.value));
