@@ -8,17 +8,26 @@ export default class Tile {
     constructor(value, position) {
         this.value = value;
         this.position = position;
+        this.element = null;
         this._renderTile();
     }
 
-    _renderTile() {
-        const element = document.createElement('div');
-        element.appendChild(document.createTextNode(this.value));
-        element.classList.add('tile', `tile-${this.value}`);
-        document.querySelector('.tile-overlay').appendChild(element);
+    moveToPosition(useCurrent, row, column) {
+        if (!useCurrent) {
+            this.position.row = row;
+            this.position.column = column;
+        }
         const gridElement = document.querySelectorAll(`#grid-row-${this.position.row} > div`)[this.position.column];
         const gridRect = gridElement.getBoundingClientRect();
-        element.style.top = `${gridRect.top}px`;
-        element.style.left = `${gridRect.left}px`;
+        this.element.style.top = `${gridRect.top}px`;
+        this.element.style.left = `${gridRect.left}px`;
+    }
+
+    _renderTile() {
+        this.element = document.createElement('div');
+        this.element.appendChild(document.createTextNode(this.value));
+        this.element.classList.add('tile', `tile-${this.value}`);
+        document.querySelector('.tile-overlay').appendChild(this.element);
+        this.moveToPosition(true);
     }
 }

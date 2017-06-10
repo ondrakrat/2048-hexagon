@@ -9,6 +9,8 @@ export default class GameState {
 
     constructor() {
         this._deleteTiles();
+        this.grid = null;
+        this.started = false;
     }
 
     newGame() {
@@ -20,21 +22,42 @@ export default class GameState {
             }
             this.setTile(position, new Tile(NEW_TILE_VALUE, position));
         }
-        console.log('New game', this.grid);
+        this.started = true;
     }
 
-    _deleteTiles() {
-        this.grid = [
-            [],
-            [],
-            [],
-            [],
-            []
-        ];
-        const overlay = document.querySelector('.tile-overlay');
-        const tiles = document.querySelectorAll('.tile');
-        if (!!tiles) {
-            tiles.forEach(tile => overlay.removeChild(tile));
+    shiftLeft() {
+        for (let i = 0; i < this.grid.length; ++i) {
+            const row = this.grid[i];
+            for (let j = 1; j < row.length; ++j) {
+                if (!!row[j]) {
+                    const tile = row[j];
+                    let endPosition = j;
+                    while (endPosition - 1 >= 0 && !row[endPosition - 1]) {
+                        --endPosition;
+                    }
+                    row[endPosition] = tile;
+                    row[j] = null;
+                    tile.moveToPosition(false, i, endPosition);
+                }
+            }
+        }
+    }
+
+    shiftRight() {
+        for (let i = 0; i < this.grid.length; ++i) {
+            const row = this.grid[i];
+            for (let j = row.length - 2; j >= 0; --j) {
+                if (!!row[j]) {
+                    const tile = row[j];
+                    let endPosition = j;
+                    while (endPosition + 1 < row.length && !row[endPosition + 1]) {
+                        ++endPosition;
+                    }
+                    row[endPosition] = tile;
+                    row[j] = null;
+                    tile.moveToPosition(false, i, endPosition);
+                }
+            }
         }
     }
 
@@ -44,6 +67,21 @@ export default class GameState {
 
     setTile(position, tile) {
         this.grid[position.row][position.column] = tile;
+    }
+
+    _deleteTiles() {
+        this.grid = [
+            [null, null],
+            [null, null, null],
+            [null, null, null, null],
+            [null, null, null],
+            [null, null]
+        ];
+        const overlay = document.querySelector('.tile-overlay');
+        const tiles = document.querySelectorAll('.tile');
+        if (!!tiles) {
+            tiles.forEach(tile => overlay.removeChild(tile));
+        }
     }
 
     static _randomPosition() {

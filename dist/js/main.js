@@ -96,11 +96,17 @@ var Position = function () {
         key: "row",
         get: function get() {
             return this._row;
+        },
+        set: function set(row) {
+            this._row = row;
         }
     }, {
         key: "column",
         get: function get() {
             return this._column;
+        },
+        set: function set(column) {
+            this._column = column;
         }
     }]);
 
@@ -144,6 +150,8 @@ var GameState = function () {
         _classCallCheck(this, GameState);
 
         this._deleteTiles();
+        this.grid = null;
+        this.started = false;
     }
 
     _createClass(GameState, [{
@@ -158,18 +166,45 @@ var GameState = function () {
                 }
                 this.setTile(position, new _Tile2.default(_constants.NEW_TILE_VALUE, position));
             }
-            console.log('New game', this.grid);
+            this.started = true;
         }
     }, {
-        key: '_deleteTiles',
-        value: function _deleteTiles() {
-            this.grid = [[], [], [], [], []];
-            var overlay = document.querySelector('.tile-overlay');
-            var tiles = document.querySelectorAll('.tile');
-            if (!!tiles) {
-                tiles.forEach(function (tile) {
-                    return overlay.removeChild(tile);
-                });
+        key: 'shiftLeft',
+        value: function shiftLeft() {
+            for (var i = 0; i < this.grid.length; ++i) {
+                var row = this.grid[i];
+                for (var j = 1; j < row.length; ++j) {
+                    if (!!row[j]) {
+                        var tile = row[j];
+                        var endPosition = j;
+                        while (endPosition - 1 >= 0 && !row[endPosition - 1]) {
+                            --endPosition;
+                        }
+                        row[endPosition] = tile;
+                        row[j] = null;
+                        tile.moveToPosition(false, i, endPosition);
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'shiftRight',
+        value: function shiftRight() {
+            for (var i = 0; i < this.grid.length; ++i) {
+                var row = this.grid[i];
+                for (var j = row.length - 2; j >= 0; --j) {
+                    if (!!row[j]) {
+                        var tile = row[j];
+                        var endPosition = j;
+                        while (endPosition + 1 < row.length && !row[endPosition + 1]) {
+                            ++endPosition;
+                        }
+                        row[endPosition] = tile;
+                        row[j] = null;
+                        console.log('moving from position ' + tile.position.row + ' ' + tile.position.column + ' to position ' + i + ' ' + endPosition);
+                        tile.moveToPosition(false, i, endPosition);
+                    }
+                }
             }
         }
     }, {
@@ -181,6 +216,18 @@ var GameState = function () {
         key: 'setTile',
         value: function setTile(position, tile) {
             this.grid[position.row][position.column] = tile;
+        }
+    }, {
+        key: '_deleteTiles',
+        value: function _deleteTiles() {
+            this.grid = [[null, null], [null, null, null], [null, null, null, null], [null, null, null], [null, null]];
+            var overlay = document.querySelector('.tile-overlay');
+            var tiles = document.querySelectorAll('.tile');
+            if (!!tiles) {
+                tiles.forEach(function (tile) {
+                    return overlay.removeChild(tile);
+                });
+            }
         }
     }], [{
         key: '_randomPosition',
@@ -241,20 +288,30 @@ var Tile = function () {
 
         this.value = value;
         this.position = position;
+        this.element = null;
         this._renderTile();
     }
 
     _createClass(Tile, [{
-        key: '_renderTile',
-        value: function _renderTile() {
-            var element = document.createElement('div');
-            element.appendChild(document.createTextNode(this.value));
-            element.classList.add('tile', 'tile-' + this.value);
-            document.querySelector('.tile-overlay').appendChild(element);
+        key: 'moveToPosition',
+        value: function moveToPosition(useCurrent, row, column) {
+            if (!useCurrent) {
+                this.position.row = row;
+                this.position.column = column;
+            }
             var gridElement = document.querySelectorAll('#grid-row-' + this.position.row + ' > div')[this.position.column];
             var gridRect = gridElement.getBoundingClientRect();
-            element.style.top = gridRect.top + 'px';
-            element.style.left = gridRect.left + 'px';
+            this.element.style.top = gridRect.top + 'px';
+            this.element.style.left = gridRect.left + 'px';
+        }
+    }, {
+        key: '_renderTile',
+        value: function _renderTile() {
+            this.element = document.createElement('div');
+            this.element.appendChild(document.createTextNode(this.value));
+            this.element.classList.add('tile', 'tile-' + this.value);
+            document.querySelector('.tile-overlay').appendChild(this.element);
+            this.moveToPosition(true);
         }
     }]);
 
@@ -290,10 +347,28 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var game = new _GameState2.default();
 
+// start game handler
 document.querySelector('#newgame').addEventListener('click', function (e) {
     e.preventDefault();
     game.newGame();
 });
+
+// movement handler
+document.onkeypress = function (e) {
+    if (!game.started) {
+        return;
+    }
+    switch (e.code) {
+        case 'Numpad4':
+            // move left
+            game.shiftLeft();
+            break;
+        case 'Numpad6':
+            // move right
+            game.shiftRight();
+            break;
+    }
+};
 
 /***/ })
 /******/ ]);
