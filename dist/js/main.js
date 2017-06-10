@@ -182,6 +182,7 @@ var GameState = function () {
         this._deleteTiles();
         this.grid = null;
         this.started = false;
+        this.movedThisTurn = false;
     }
 
     _createClass(GameState, [{
@@ -224,6 +225,10 @@ var GameState = function () {
                     console.error('Invalid direction: ' + direction);
                     break;
             }
+            if (this.movedThisTurn) {
+                this._generateRandomTiles();
+            }
+            this._deleteMergedFlag();
         }
     }, {
         key: 'getTile',
@@ -255,6 +260,7 @@ var GameState = function () {
                             _tile.moveToPosition(false, i, endPosition - 1);
                             row[endPosition - 1].merge(_tile);
                             row[j] = null;
+                            this.movedThisTurn = true;
                             continue;
                         } else if (_tile.compare(new _Position2.default(i, endPosition))) {
                             // while was not called, thus tile should not be shifted
@@ -263,6 +269,7 @@ var GameState = function () {
                         row[endPosition] = _tile;
                         row[j] = null;
                         _tile.moveToPosition(false, i, endPosition);
+                        this.movedThisTurn = true;
                     }
                 }
             }
@@ -285,6 +292,7 @@ var GameState = function () {
                             tile.moveToPosition(false, i, endPosition + 1);
                             row[endPosition + 1].merge(tile);
                             row[j] = null;
+                            this.movedThisTurn = true;
                             continue;
                         } else if (tile.compare(new _Position2.default(i, endPosition))) {
                             // while was not called, thus tile should not be shifted
@@ -293,6 +301,7 @@ var GameState = function () {
                         row[endPosition] = tile;
                         row[j] = null;
                         tile.moveToPosition(false, i, endPosition);
+                        this.movedThisTurn = true;
                     }
                 }
             }
@@ -345,6 +354,7 @@ var GameState = function () {
                         tile.moveToPosition(false, _endPosition.row, _endPosition.column);
                         this.grid[_endPosition.row][_endPosition.column].merge(tile);
                         this.grid[position.row][position.column] = null;
+                        this.movedThisTurn = true;
                         continue;
                     } else if (tile.compare(row[endPositionIndex])) {
                         continue;
@@ -353,6 +363,7 @@ var GameState = function () {
                     this.grid[endPosition.row][endPosition.column] = tile;
                     this.grid[position.row][position.column] = null;
                     tile.moveToPosition(false, endPosition.row, endPosition.column);
+                    this.movedThisTurn = true;
                 }
             }
         }
@@ -373,6 +384,7 @@ var GameState = function () {
                         tile.moveToPosition(false, _endPosition2.row, _endPosition2.column);
                         this.grid[_endPosition2.row][_endPosition2.column].merge(tile);
                         this.grid[position.row][position.column] = null;
+                        this.movedThisTurn = true;
                         continue;
                     } else if (tile.compare(row[endPositionIndex])) {
                         // while was not called, thus tile should not be shifted
@@ -382,15 +394,32 @@ var GameState = function () {
                     this.grid[endPosition.row][endPosition.column] = tile;
                     this.grid[position.row][position.column] = null;
                     tile.moveToPosition(false, endPosition.row, endPosition.column);
+                    this.movedThisTurn = true;
                 }
+            }
+        }
+    }, {
+        key: '_generateRandomTiles',
+        value: function _generateRandomTiles() {
+            var generatedAmount = Math.floor(Math.random() * 2) + 1;
+            for (var i = 0; i < generatedAmount; ++i) {
+                var position = GameState._randomPosition();
+                while (!!this.grid[position.row][position.column]) {
+                    position = GameState._randomPosition();
+                }
+                // generate tile 4 with 25% probability
+                var tile = new _Tile2.default(Math.random() * 100 > 75 ? 4 : 2, position);
+                this.setTile(position, tile);
             }
         }
     }, {
         key: '_deleteMergedFlag',
         value: function _deleteMergedFlag() {
             this.grid.forEach(function (row) {
-                row.forEach(function (tile) {
-                    return tile.justMerged = false;
+                row.filter(function (row) {
+                    return !!row;
+                }).forEach(function (tile) {
+                    tile.justMerged = false;
                 });
             });
         }

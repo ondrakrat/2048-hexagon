@@ -11,6 +11,7 @@ export default class GameState {
         this._deleteTiles();
         this.grid = null;
         this.started = false;
+        this.movedThisTurn = false;
     }
 
     newGame() {
@@ -49,6 +50,10 @@ export default class GameState {
                 console.error(`Invalid direction: ${direction}`);
                 break;
         }
+        if (this.movedThisTurn) {
+            this._generateRandomTiles();
+        }
+        this._deleteMergedFlag();
     }
 
     getTile(position) {
@@ -76,6 +81,7 @@ export default class GameState {
                         tile.moveToPosition(false, i, endPosition - 1);
                         row[endPosition - 1].merge(tile);
                         row[j] = null;
+                        this.movedThisTurn = true;
                         continue;
                     } else if (tile.compare(new Position(i, endPosition))) {
                         // while was not called, thus tile should not be shifted
@@ -84,6 +90,7 @@ export default class GameState {
                     row[endPosition] = tile;
                     row[j] = null;
                     tile.moveToPosition(false, i, endPosition);
+                    this.movedThisTurn = true;
                 }
             }
         }
@@ -105,6 +112,7 @@ export default class GameState {
                         tile.moveToPosition(false, i, endPosition + 1);
                         row[endPosition + 1].merge(tile);
                         row[j] = null;
+                        this.movedThisTurn = true;
                         continue;
                     } else if (tile.compare(new Position(i, endPosition))) {
                         // while was not called, thus tile should not be shifted
@@ -113,6 +121,7 @@ export default class GameState {
                     row[endPosition] = tile;
                     row[j] = null;
                     tile.moveToPosition(false, i, endPosition);
+                    this.movedThisTurn = true;
                 }
             }
         }
@@ -164,6 +173,7 @@ export default class GameState {
                     tile.moveToPosition(false, endPosition.row, endPosition.column);
                     this.grid[endPosition.row][endPosition.column].merge(tile);
                     this.grid[position.row][position.column] = null;
+                    this.movedThisTurn = true;
                     continue;
                 } else if (tile.compare(row[endPositionIndex])) {
                     continue;
@@ -172,6 +182,7 @@ export default class GameState {
                 this.grid[endPosition.row][endPosition.column] = tile;
                 this.grid[position.row][position.column] = null;
                 tile.moveToPosition(false, endPosition.row, endPosition.column);
+                this.movedThisTurn = true;
             }
         }
     }
@@ -195,6 +206,7 @@ export default class GameState {
                     tile.moveToPosition(false, endPosition.row, endPosition.column);
                     this.grid[endPosition.row][endPosition.column].merge(tile);
                     this.grid[position.row][position.column] = null;
+                    this.movedThisTurn = true;
                     continue;
                 } else if (tile.compare(row[endPositionIndex])) {
                     // while was not called, thus tile should not be shifted
@@ -204,13 +216,31 @@ export default class GameState {
                 this.grid[endPosition.row][endPosition.column] = tile;
                 this.grid[position.row][position.column] = null;
                 tile.moveToPosition(false, endPosition.row, endPosition.column);
+                this.movedThisTurn = true;
             }
+        }
+    }
+
+    _generateRandomTiles() {
+        const generatedAmount = Math.floor(Math.random() * 2) + 1;
+        for (let i = 0; i < generatedAmount; ++i) {
+            let position = GameState._randomPosition();
+            while (!!this.grid[position.row][position.column]) {
+                position = GameState._randomPosition();
+            }
+            // generate tile 4 with 25% probability
+            const tile = new Tile(Math.random() * 100 > 75 ? 4 : 2, position);
+            this.setTile(position, tile);
         }
     }
 
     _deleteMergedFlag() {
         this.grid.forEach(row => {
-            row.forEach(tile => tile.justMerged = false);
+            row
+                .filter(row => !!row)
+                .forEach(tile => {
+                tile.justMerged = false;
+            });
         });
     }
 
