@@ -9,6 +9,7 @@ export default class Tile {
         this.value = value;
         this.position = position;
         this.element = null;
+        this.justMerged = false;
         this._renderTile();
     }
 
@@ -21,6 +22,17 @@ export default class Tile {
         const gridRect = gridElement.getBoundingClientRect();
         this.element.style.top = `${gridRect.top}px`;
         this.element.style.left = `${gridRect.left}px`;
+    }
+
+    merge(other) {
+        this.element.classList.remove(`tile-${this.value}`);
+        this.value *= 2;
+        this.element.classList.add(`tile-${this.value}`);
+        this.element.innerHTML = this.value;
+        this.justMerged = true;
+        // delete the other tile that was merged into this one
+        const overlay = document.querySelector('.tile-overlay');
+        overlay.removeChild(other.element);
     }
 
     compare(position) {

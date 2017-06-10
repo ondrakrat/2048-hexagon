@@ -250,7 +250,13 @@ var GameState = function () {
                         while (endPosition - 1 >= 0 && !row[endPosition - 1]) {
                             --endPosition;
                         }
-                        if (_tile.compare(new _Position2.default(i, endPosition))) {
+                        if (endPosition > 0 && !!row[endPosition - 1] && row[endPosition - 1].value === _tile.value && !row[endPosition - 1].justMerged) {
+                            // check for mergeable tile
+                            _tile.moveToPosition(false, i, endPosition - 1);
+                            row[endPosition - 1].merge(_tile);
+                            row[j] = null;
+                            continue;
+                        } else if (_tile.compare(new _Position2.default(i, endPosition))) {
                             // while was not called, thus tile should not be shifted
                             continue;
                         }
@@ -275,7 +281,12 @@ var GameState = function () {
                         while (endPosition + 1 < row.length && !row[endPosition + 1]) {
                             ++endPosition;
                         }
-                        if (tile.compare(new _Position2.default(i, endPosition))) {
+                        if (endPosition < row.length - 1 && !!row[endPosition + 1] && row[endPosition + 1].value === tile.value && !row[endPosition + 1].justMerged) {
+                            tile.moveToPosition(false, i, endPosition + 1);
+                            row[endPosition + 1].merge(tile);
+                            row[j] = null;
+                            continue;
+                        } else if (tile.compare(new _Position2.default(i, endPosition))) {
                             // while was not called, thus tile should not be shifted
                             continue;
                         }
@@ -329,7 +340,13 @@ var GameState = function () {
                     while (endPositionIndex - 1 >= 0 && !this.grid[row[endPositionIndex - 1].row][row[endPositionIndex - 1].column]) {
                         --endPositionIndex;
                     }
-                    if (tile.compare(row[endPositionIndex])) {
+                    if (endPositionIndex > 0 && !!this.grid[row[endPositionIndex - 1].row][row[endPositionIndex - 1].column] && this.grid[row[endPositionIndex - 1].row][row[endPositionIndex - 1].column].value === tile.value && !this.grid[row[endPositionIndex - 1].row][row[endPositionIndex - 1].column].justMerged) {
+                        var _endPosition = row[endPositionIndex - 1];
+                        tile.moveToPosition(false, _endPosition.row, _endPosition.column);
+                        this.grid[_endPosition.row][_endPosition.column].merge(tile);
+                        this.grid[position.row][position.column] = null;
+                        continue;
+                    } else if (tile.compare(row[endPositionIndex])) {
                         continue;
                     }
                     var endPosition = row[endPositionIndex];
@@ -351,7 +368,13 @@ var GameState = function () {
                     while (endPositionIndex + 1 < row.length && !this.grid[row[endPositionIndex + 1].row][row[endPositionIndex + 1].column]) {
                         ++endPositionIndex;
                     }
-                    if (tile.compare(row[endPositionIndex])) {
+                    if (endPositionIndex < row.length - 1 && !!this.grid[row[endPositionIndex + 1].row][row[endPositionIndex + 1].column] && this.grid[row[endPositionIndex + 1].row][row[endPositionIndex + 1].column].value === tile.value && !this.grid[row[endPositionIndex + 1].row][row[endPositionIndex + 1].column].justMerged) {
+                        var _endPosition2 = row[endPositionIndex + 1];
+                        tile.moveToPosition(false, _endPosition2.row, _endPosition2.column);
+                        this.grid[_endPosition2.row][_endPosition2.column].merge(tile);
+                        this.grid[position.row][position.column] = null;
+                        continue;
+                    } else if (tile.compare(row[endPositionIndex])) {
                         // while was not called, thus tile should not be shifted
                         continue;
                     }
@@ -361,6 +384,15 @@ var GameState = function () {
                     tile.moveToPosition(false, endPosition.row, endPosition.column);
                 }
             }
+        }
+    }, {
+        key: '_deleteMergedFlag',
+        value: function _deleteMergedFlag() {
+            this.grid.forEach(function (row) {
+                row.forEach(function (tile) {
+                    return tile.justMerged = false;
+                });
+            });
         }
     }, {
         key: '_deleteTiles',
@@ -435,6 +467,7 @@ var Tile = function () {
         this.value = value;
         this.position = position;
         this.element = null;
+        this.justMerged = false;
         this._renderTile();
     }
 
@@ -449,6 +482,18 @@ var Tile = function () {
             var gridRect = gridElement.getBoundingClientRect();
             this.element.style.top = gridRect.top + 'px';
             this.element.style.left = gridRect.left + 'px';
+        }
+    }, {
+        key: 'merge',
+        value: function merge(other) {
+            this.element.classList.remove('tile-' + this.value);
+            this.value *= 2;
+            this.element.classList.add('tile-' + this.value);
+            this.element.innerHTML = this.value;
+            this.justMerged = true;
+            // delete the other tile that was merged into this one
+            var overlay = document.querySelector('.tile-overlay');
+            overlay.removeChild(other.element);
         }
     }, {
         key: 'compare',

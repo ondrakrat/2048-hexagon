@@ -71,7 +71,13 @@ export default class GameState {
                     while (endPosition - 1 >= 0 && !row[endPosition - 1]) {
                         --endPosition;
                     }
-                    if (tile.compare(new Position(i, endPosition))) {
+                    if (endPosition > 0 && !!row[endPosition - 1]
+                        && row[endPosition - 1].value === tile.value && !row[endPosition - 1].justMerged) { // check for mergeable tile
+                        tile.moveToPosition(false, i, endPosition - 1);
+                        row[endPosition - 1].merge(tile);
+                        row[j] = null;
+                        continue;
+                    } else if (tile.compare(new Position(i, endPosition))) {
                         // while was not called, thus tile should not be shifted
                         continue;
                     }
@@ -94,7 +100,13 @@ export default class GameState {
                     while (endPosition + 1 < row.length && !row[endPosition + 1]) {
                         ++endPosition;
                     }
-                    if (tile.compare(new Position(i, endPosition))) {
+                    if (endPosition < row.length - 1 && !!row[endPosition + 1]
+                        && row[endPosition + 1].value === tile.value && !row[endPosition + 1].justMerged) {
+                        tile.moveToPosition(false, i, endPosition + 1);
+                        row[endPosition + 1].merge(tile);
+                        row[j] = null;
+                        continue;
+                    } else if (tile.compare(new Position(i, endPosition))) {
                         // while was not called, thus tile should not be shifted
                         continue;
                     }
@@ -144,7 +156,16 @@ export default class GameState {
                 && !this.grid[row[endPositionIndex - 1].row][row[endPositionIndex - 1].column]) {
                     --endPositionIndex;
                 }
-                if (tile.compare(row[endPositionIndex])) {
+                if (endPositionIndex > 0
+                    && !!this.grid[row[endPositionIndex - 1].row][row[endPositionIndex - 1].column]
+                    && this.grid[row[endPositionIndex - 1].row][row[endPositionIndex - 1].column].value === tile.value
+                    && !this.grid[row[endPositionIndex - 1].row][row[endPositionIndex - 1].column].justMerged) {
+                    const endPosition = row[endPositionIndex - 1];
+                    tile.moveToPosition(false, endPosition.row, endPosition.column);
+                    this.grid[endPosition.row][endPosition.column].merge(tile);
+                    this.grid[position.row][position.column] = null;
+                    continue;
+                } else if (tile.compare(row[endPositionIndex])) {
                     continue;
                 }
                 const endPosition = row[endPositionIndex];
@@ -166,7 +187,16 @@ export default class GameState {
                 && !this.grid[row[endPositionIndex + 1].row][row[endPositionIndex + 1].column]) {
                     ++endPositionIndex;
                 }
-                if (tile.compare(row[endPositionIndex])) {
+                if (endPositionIndex < row.length - 1
+                    && !!this.grid[row[endPositionIndex + 1].row][row[endPositionIndex + 1].column]
+                    && this.grid[row[endPositionIndex + 1].row][row[endPositionIndex + 1].column].value === tile.value
+                    && !this.grid[row[endPositionIndex + 1].row][row[endPositionIndex + 1].column].justMerged) {
+                    const endPosition = row[endPositionIndex + 1];
+                    tile.moveToPosition(false, endPosition.row, endPosition.column);
+                    this.grid[endPosition.row][endPosition.column].merge(tile);
+                    this.grid[position.row][position.column] = null;
+                    continue;
+                } else if (tile.compare(row[endPositionIndex])) {
                     // while was not called, thus tile should not be shifted
                     continue;
                 }
@@ -176,6 +206,12 @@ export default class GameState {
                 tile.moveToPosition(false, endPosition.row, endPosition.column);
             }
         }
+    }
+
+    _deleteMergedFlag() {
+        this.grid.forEach(row => {
+            row.forEach(tile => tile.justMerged = false);
+        });
     }
 
     _deleteTiles() {
