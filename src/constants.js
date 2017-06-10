@@ -1,0 +1,1 @@
+export const NEW_TILE_VALUE = 2;

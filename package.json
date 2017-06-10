@@ -1,0 +1,31 @@
+{
+  "name": "2048-octagon",
+  "version": "1.0.0",
+  "description": "Semestral project at FEE CTU",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "build": "babel src -d dist",
+    "webpack": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ondrakrat/2048-octagon.git"
+  },
+  "keywords": [
+    "2048",
+    "octagon"
+  ],
+  "author": "Ondřej Kratochvíl",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ondrakrat/2048-octagon/issues"
+  },
+  "homepage": "https://github.com/ondrakrat/2048-octagon#readme",
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-preset-latest": "^6.24.1",
+    "webpack": "^2.6.1"
+  }
+}

@@ -73,7 +73,7 @@ body div.grid .empty-tile {
   -moz-border-radius: 50px;
   -webkit-border-radius: 50px;
   border-radius: 50px;
-  background-color: #eee4da;
+  background-color: rgba(238, 228, 218, 0.35);
 }
 body div.grid .empty-tile:not(:last-child) {
   margin-right: 10px;
@@ -89,6 +89,7 @@ body div.tile {
   text-align: center;
   vertical-align: middle;
   line-height: 100px;
+  position: absolute;
 }
 body div.tile-2 {
   background: #eee4da;
@@ -122,6 +123,19 @@ body div.tile-1024 {
 }
 body div.tile-2048 {
   background: #edc22e;
+}
+body div.tile-overlay {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  top: 0;
+  left: 0;
+  margin: 0 auto;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+body div#game-wrapper {
+  position: relative;
 }
 body #newgame {
   background-color: #716051;
