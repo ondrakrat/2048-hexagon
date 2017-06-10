@@ -16,5 +16,9 @@ export default class Tile {
         element.appendChild(document.createTextNode(this.value));
         element.classList.add('tile', `tile-${this.value}`);
         document.querySelector('.tile-overlay').appendChild(element);
+        const gridElement = document.querySelectorAll(`#grid-row-${this.position.row} > div`)[this.position.column];
+        const gridRect = gridElement.getBoundingClientRect();
+        element.style.top = `${gridRect.top}px`;
+        element.style.left = `${gridRect.left}px`;
     }
 }
