@@ -23,7 +23,13 @@ export default class GameState {
             }
             this.setTile(position, new Tile(NEW_TILE_VALUE, position));
         }
+        this.movedThisTurn = false;
         this.started = true;
+    }
+
+    gameOver() {
+        alert('Game over');
+        this.started = false;
     }
 
     handleMove(direction) {
@@ -52,6 +58,7 @@ export default class GameState {
         }
         if (this.movedThisTurn) {
             this._generateRandomTiles();
+            this.movedThisTurn = false;
         }
         this._deleteMergedFlag();
     }
@@ -222,7 +229,12 @@ export default class GameState {
     }
 
     _generateRandomTiles() {
-        const generatedAmount = Math.floor(Math.random() * 2) + 1;
+        const empty = this._countEmpty();
+        if (empty === 0) {
+            this.gameOver();
+            return;
+        }
+        const generatedAmount = empty > 3 ? (Math.floor(Math.random() * 2) + 1) : 1;
         for (let i = 0; i < generatedAmount; ++i) {
             let position = GameState._randomPosition();
             while (!!this.grid[position.row][position.column]) {
@@ -257,6 +269,18 @@ export default class GameState {
         if (!!tiles) {
             tiles.forEach(tile => overlay.removeChild(tile));
         }
+    }
+
+    _countEmpty() {
+        let count = 0;
+        this.grid.forEach(row => {
+            row
+                .filter(row => !row)
+                .forEach(tile => {
+                    ++count;
+                });
+        });
+        return count;
     }
 
     static _randomPosition() {

@@ -197,7 +197,14 @@ var GameState = function () {
                 }
                 this.setTile(position, new _Tile2.default(_constants.NEW_TILE_VALUE, position));
             }
+            this.movedThisTurn = false;
             this.started = true;
+        }
+    }, {
+        key: 'gameOver',
+        value: function gameOver() {
+            alert('Game over');
+            this.started = false;
         }
     }, {
         key: 'handleMove',
@@ -227,6 +234,7 @@ var GameState = function () {
             }
             if (this.movedThisTurn) {
                 this._generateRandomTiles();
+                this.movedThisTurn = false;
             }
             this._deleteMergedFlag();
         }
@@ -401,7 +409,12 @@ var GameState = function () {
     }, {
         key: '_generateRandomTiles',
         value: function _generateRandomTiles() {
-            var generatedAmount = Math.floor(Math.random() * 2) + 1;
+            var empty = this._countEmpty();
+            if (empty === 0) {
+                this.gameOver();
+                return;
+            }
+            var generatedAmount = empty > 3 ? Math.floor(Math.random() * 2) + 1 : 1;
             for (var i = 0; i < generatedAmount; ++i) {
                 var position = GameState._randomPosition();
                 while (!!this.grid[position.row][position.column]) {
@@ -434,6 +447,19 @@ var GameState = function () {
                     return overlay.removeChild(tile);
                 });
             }
+        }
+    }, {
+        key: '_countEmpty',
+        value: function _countEmpty() {
+            var count = 0;
+            this.grid.forEach(function (row) {
+                row.filter(function (row) {
+                    return !row;
+                }).forEach(function (tile) {
+                    ++count;
+                });
+            });
+            return count;
         }
     }], [{
         key: '_randomPosition',
@@ -523,7 +549,9 @@ var Tile = function () {
             // delete the other tile that was merged into this one
             var overlay = document.querySelector('.tile-overlay');
             overlay.removeChild(other.element);
-            if (this.value > 8) {
+            if (this.value > 65536) {
+                this.element.style.fontSize = '30px';
+            } else if (this.value > 8192) {
                 this.element.style.fontSize = '35px';
             }
         }
