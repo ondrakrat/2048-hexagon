@@ -1,3 +1,4 @@
+@font-colour: rgb(119, 110, 101);
 @bg-colour: rgb(187, 173, 160);
 @empty-colour: rgb(238, 228, 218);
 @2-colour: rgb(238, 228, 218);
@@ -112,17 +113,35 @@ body {
       -moz-border-radius: 50px;
       -webkit-border-radius: 50px;
       border-radius: 50px;
+      font-size: 55px;
+      color: @font-colour;
+      text-align: center;
+      vertical-align: middle;
+      line-height: 100px;
     }
 
     .generate-tile-classes(2048);
 
     .generate-tile-classes(@n, @i: 2) when (@i =< @n) {
 
-      .tile-@{i} {
+      &.tile-@{i} {
         @variable-name: "@{i}-colour";
         background: @@variable-name;
       }
       .generate-tile-classes(@n, (@i * 2));
     }
+  }
+
+  #newgame {
+    background-color: darken(@bg-colour, 30%);
+    color: #fff;
+    border: none;
+    height: 35px;
+    width: 100px;
+    border-radius: 3px;
+    font-size: 14px;
+    cursor: pointer;
+    display: block;
+    margin: 10px auto;
   }
 }

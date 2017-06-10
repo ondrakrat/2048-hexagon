@@ -84,37 +84,54 @@ body div.tile {
   -moz-border-radius: 50px;
   -webkit-border-radius: 50px;
   border-radius: 50px;
+  font-size: 55px;
+  color: #776e65;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 100px;
 }
-body div .tile-2 {
+body div.tile-2 {
   background: #eee4da;
 }
-body div .tile-4 {
+body div.tile-4 {
   background: #ede0c8;
 }
-body div .tile-8 {
+body div.tile-8 {
   background: #f2b179;
 }
-body div .tile-16 {
+body div.tile-16 {
   background: #f59563;
 }
-body div .tile-32 {
+body div.tile-32 {
   background: #f67c5f;
 }
-body div .tile-64 {
+body div.tile-64 {
   background: #f65e3b;
 }
-body div .tile-128 {
+body div.tile-128 {
   background: #edcf72;
 }
-body div .tile-256 {
+body div.tile-256 {
   background: #edcc61;
 }
-body div .tile-512 {
+body div.tile-512 {
   background: #edc850;
 }
-body div .tile-1024 {
+body div.tile-1024 {
   background: #edc53f;
 }
-body div .tile-2048 {
+body div.tile-2048 {
   background: #edc22e;
+}
+body #newgame {
+  background-color: #716051;
+  color: #fff;
+  border: none;
+  height: 35px;
+  width: 100px;
+  border-radius: 3px;
+  font-size: 14px;
+  cursor: pointer;
+  display: block;
+  margin: 10px auto;
 }
