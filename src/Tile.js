@@ -33,6 +33,11 @@ export default class Tile {
         // delete the other tile that was merged into this one
         const overlay = document.querySelector('.tile-overlay');
         overlay.removeChild(other.element);
+        if (this.value > 65536) {
+            this.element.style.fontSize = '30px';
+        } else if (this.value > 8192) {
+            this.element.style.fontSize = '35px';
+        }
     }
 
     compare(position) {

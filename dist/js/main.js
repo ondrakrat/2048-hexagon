@@ -523,6 +523,9 @@ var Tile = function () {
             // delete the other tile that was merged into this one
             var overlay = document.querySelector('.tile-overlay');
             overlay.removeChild(other.element);
+            if (this.value > 8) {
+                this.element.style.fontSize = '35px';
+            }
         }
     }, {
         key: 'compare',
