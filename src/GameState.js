@@ -59,6 +59,9 @@ export default class GameState {
         if (this.movedThisTurn) {
             this._generateRandomTiles();
             this.movedThisTurn = false;
+            if (this._countEmpty() === 0) {
+                this._checkGameOver();
+            }
         }
         this._deleteMergedFlag();
     }
@@ -281,6 +284,45 @@ export default class GameState {
                 });
         });
         return count;
+    }
+
+    _checkGameOver() {
+        let canMove = false;
+        this.grid.forEach(row => {
+            let lastValue = -1;
+            for (let i = 0; i < row.length; ++i) {
+                if (!row[i] || row[i].value === lastValue) {    // check if right/left movement is possible
+                    canMove = true;
+                    return;
+                }
+                lastValue = row[i].value;
+            }
+        });
+        MAIN_DIAGONAL.forEach(row => {
+            let lastValue = -1;
+            for (let i = 0; i < row.length; ++i) {
+                const tile = this.grid[row[i].row][row[i].column];
+                if (!tile || tile.value === lastValue) {    // check if main diagonal movement is possible
+                    canMove = true;
+                    return;
+                }
+                lastValue = tile.value;
+            }
+        });
+        ANTI_DIAGONAL.forEach(row => {
+            let lastValue = -1;
+            for (let i = 0; i < row.length; ++i) {
+                const tile = this.grid[row[i].row][row[i].column];
+                if (!tile || tile.value === lastValue) {    // check if anti diagonal movement is possible
+                    canMove = true;
+                    return;
+                }
+                lastValue = tile.value;
+            }
+        });
+        if (!canMove) {
+            this.gameOver();
+        }
     }
 
     static _randomPosition() {

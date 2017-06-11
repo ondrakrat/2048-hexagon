@@ -235,6 +235,9 @@ var GameState = function () {
             if (this.movedThisTurn) {
                 this._generateRandomTiles();
                 this.movedThisTurn = false;
+                if (this._countEmpty() === 0) {
+                    this._checkGameOver();
+                }
             }
             this._deleteMergedFlag();
         }
@@ -460,6 +463,55 @@ var GameState = function () {
                 });
             });
             return count;
+        }
+    }, {
+        key: '_checkGameOver',
+        value: function _checkGameOver() {
+            var _this = this;
+
+            var canMove = false;
+            this.grid.forEach(function (row) {
+                var lastValue = -1;
+                for (var i = 0; i < row.length; ++i) {
+                    if (!row[i] || row[i].value === lastValue) {
+                        // check if right/left movement is possible
+                        console.log('Movement found horizontally', row[i].position);
+                        canMove = true;
+                        return;
+                    }
+                    lastValue = row[i].value;
+                }
+            });
+            _constants.MAIN_DIAGONAL.forEach(function (row) {
+                var lastValue = -1;
+                for (var i = 0; i < row.length; ++i) {
+                    var tile = _this.grid[row[i].row][row[i].column];
+                    if (!tile || tile.value === lastValue) {
+                        // check if main diagonal movement is possible
+                        console.log('Movement found on main diagonal', tile.position);
+                        canMove = true;
+                        return;
+                    }
+                    lastValue = tile.value;
+                }
+            });
+            _constants.ANTI_DIAGONAL.forEach(function (row) {
+                var lastValue = -1;
+                for (var i = 0; i < row.length; ++i) {
+                    var tile = _this.grid[row[i].row][row[i].column];
+                    if (!tile || tile.value === lastValue) {
+                        // check if anti diagonal movement is possible
+                        console.log('Movement found on anti diagonal', tile.position);
+                        canMove = true;
+                        return;
+                    }
+                    lastValue = tile.value;
+                }
+            });
+            console.log('All checks failed, canMove: ' + canMove);
+            if (!canMove) {
+                this.gameOver();
+            }
         }
     }], [{
         key: '_randomPosition',
