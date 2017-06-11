@@ -1,5 +1,5 @@
 {
-  "name": "2048-octagon",
+  "name": "2048-hexagon",
   "version": "1.0.0",
   "description": "Semestral project at FEE CTU",
   "main": "index.js",
@@ -10,18 +10,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ondrakrat/2048-octagon.git"
+    "url": "git+https://github.com/ondrakrat/2048-hexagon.git"
   },
   "keywords": [
     "2048",
-    "octagon"
+    "hexagon"
   ],
   "author": "Ondřej Kratochvíl",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ondrakrat/2048-octagon/issues"
+    "url": "https://github.com/ondrakrat/2048-hexagon/issues"
   },
-  "homepage": "https://github.com/ondrakrat/2048-octagon#readme",
+  "homepage": "https://github.com/ondrakrat/2048-hexagon#readme",
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-loader": "^7.0.0",
