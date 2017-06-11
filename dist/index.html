@@ -8,7 +8,7 @@
 <body>
 <h1>Hexagonal 2048</h1>
 <div class="top-wrapper">
-    <button id="newgame" type="button">New game</button>
+    <button id="newgame" type="button" autofocus>New game</button>
     <svg xmlns="http://www.w3.org/2000/svg">
         <g>
             <rect x="0" y="0" width="160" height="50"  rx="5" ry="5"></rect>
@@ -21,6 +21,15 @@
             <text x="250" y="40" text-anchor="middle" font-size="25" class="high-score">0</text>
         </g>
     </svg>
+</div>
+<div class="right-bar">
+    <div id="music">
+        <div>Listen to some peaceful music while you play!</div>
+        <audio controls>
+            <source src="sound/elevator_music.mp3" type="audio/mpeg">
+            Audio is not supported by your browser. Sorry!
+        </audio>
+    </div>
 </div>
 <div id="game-wrapper">
     <div class="square-bg grid">
