@@ -1,8 +1,11 @@
 import 'babel-polyfill';
 import GameState from './GameState';
-import {Direction} from "./constants";
+import {Direction, LOCAL_STORAGE_KEY} from "./constants";
 
 const game = new GameState();
+if (game.localStorageAvailable && !!localStorage.getItem(LOCAL_STORAGE_KEY)) {
+    document.querySelector('svg text.high-score').textContent = localStorage.getItem(LOCAL_STORAGE_KEY);
+}
 
 // start game handler
 document.querySelector('#newgame').addEventListener('click', (e) => {
@@ -43,3 +46,27 @@ document.onkeypress = (e) => {
             break;
     }
 };
+
+export function storageAvailable(type) {
+    try {
+        let storage = window[type],
+            x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    }
+    catch(e) {
+        return e instanceof DOMException && (
+                // everything except Firefox
+            e.code === 22 ||
+            // Firefox
+            e.code === 1014 ||
+            // test name field too, because code might not be present
+            // everything except Firefox
+            e.name === 'QuotaExceededError' ||
+            // Firefox
+            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            storage.length !== 0;
+    }
+}

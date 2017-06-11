@@ -3,7 +3,8 @@
  */
 import Position from './Position';
 import Tile from "./Tile";
-import {NEW_TILE_VALUE, MAIN_DIAGONAL, ANTI_DIAGONAL, Direction} from './constants';
+import {NEW_TILE_VALUE, MAIN_DIAGONAL, ANTI_DIAGONAL, Direction, LOCAL_STORAGE_KEY} from './constants';
+import {storageAvailable} from './main';
 
 export default class GameState {
 
@@ -13,6 +14,10 @@ export default class GameState {
         this.started = false;
         this.movedThisTurn = false;
         this.score = 0;
+        this.localStorageAvailable = storageAvailable('localStorage');
+        if (this.localStorageAvailable && !localStorage.getItem(LOCAL_STORAGE_KEY)) {
+            localStorage.setItem(LOCAL_STORAGE_KEY, 0);
+        }
     }
 
     newGame() {
@@ -28,6 +33,7 @@ export default class GameState {
         this.movedThisTurn = false;
         this.started = true;
         this.score = 0;
+        document.querySelector('svg text.score').textContent = this.score;
     }
 
     gameOver() {
@@ -68,6 +74,10 @@ export default class GameState {
             }
         }
         document.querySelector('svg text.score').textContent = this.score;
+        if (this.localStorageAvailable && this.score > localStorage.getItem(LOCAL_STORAGE_KEY)) {
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.score);
+            document.querySelector('svg text.high-score').textContent = localStorage.getItem(LOCAL_STORAGE_KEY);
+        }
         this._deleteMergedFlag();
     }
 

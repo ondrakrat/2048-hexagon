@@ -20,3 +20,4 @@ export const ANTI_DIAGONAL = [
     [new Position(1, 2), new Position(2, 2), new Position(3, 1), new Position(4, 0)],
     [new Position(2, 3), new Position(3, 2), new Position(4, 1)]
 ];
+export const LOCAL_STORAGE_KEY = 'highScore';

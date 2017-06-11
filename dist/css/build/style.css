@@ -185,10 +185,13 @@ body div.top-wrapper {
   width: 500px;
   height: 50px;
 }
-body div.top-wrapper svg rect {
+body div.top-wrapper svg {
+  width: 330px;
+}
+body div.top-wrapper svg g rect {
   fill: #716051;
 }
-body div.top-wrapper svg text {
+body div.top-wrapper svg g text {
   fill: #fff;
 }
 body #newgame {
@@ -196,7 +199,7 @@ body #newgame {
   color: #fff;
   border: none;
   height: 50px;
-  width: 150px;
+  width: 160px;
   border-radius: 5px;
   font-size: 20px;
   cursor: pointer;
