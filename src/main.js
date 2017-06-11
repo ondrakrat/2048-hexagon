@@ -47,6 +47,25 @@ document.onkeypress = (e) => {
     }
 };
 
+const networkStatusElement = document.querySelector('span.network-status');
+if (navigator.onLine) {
+    networkStatusElement.classList.add('online');
+    networkStatusElement.innerHTML = 'Online';
+} else {
+    networkStatusElement.classList.add('offline');
+    networkStatusElement.innerHTML = 'Offline';
+}
+window.addEventListener('online',  e => {
+    networkStatusElement.classList.remove('offline');
+    networkStatusElement.classList.add('online');
+    networkStatusElement.innerHTML = 'Online';
+});
+window.addEventListener('offline', e => {
+    networkStatusElement.classList.remove('online');
+    networkStatusElement.classList.add('offline');
+    networkStatusElement.innerHTML = 'Offline';
+});
+
 export function storageAvailable(type) {
     try {
         let storage = window[type],

@@ -201,6 +201,15 @@ body div.top-wrapper svg g rect {
 body div.top-wrapper svg g text {
   fill: #fff;
 }
+body span.network-status {
+  font-weight: bold;
+}
+body span.network-status.online {
+  color: #689F38;
+}
+body span.network-status.offline {
+  color: #EA2F10;
+}
 body aside.right-bar {
   position: fixed;
   left: 80%;

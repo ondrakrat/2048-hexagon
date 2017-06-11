@@ -2659,6 +2659,25 @@ document.onkeypress = function (e) {
     }
 };
 
+var networkStatusElement = document.querySelector('span.network-status');
+if (navigator.onLine) {
+    networkStatusElement.classList.add('online');
+    networkStatusElement.innerHTML = 'Online';
+} else {
+    networkStatusElement.classList.add('offline');
+    networkStatusElement.innerHTML = 'Offline';
+}
+window.addEventListener('online', function (e) {
+    networkStatusElement.classList.remove('offline');
+    networkStatusElement.classList.add('online');
+    networkStatusElement.innerHTML = 'Online';
+});
+window.addEventListener('offline', function (e) {
+    networkStatusElement.classList.remove('online');
+    networkStatusElement.classList.add('offline');
+    networkStatusElement.innerHTML = 'Offline';
+});
+
 function storageAvailable(type) {
     try {
         var _storage = window[type],
