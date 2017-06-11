@@ -4,11 +4,19 @@
     <meta charset="UTF-8">
     <title>Hexagonal 2048</title>
     <link rel="stylesheet" href="css/build/style.css"/>
-    <script type="application/javascript" src="js/foreach-polyfill.js"></script>
 </head>
 <body>
 <h1>Hexagonal 2048</h1>
-<button id="newgame" type="button">New game</button>
+<div class="top-wrapper">
+    <button id="newgame" type="button">New game</button>
+    <svg xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <rect x="0" y="0" width="150" height="50"  rx="5" ry="5"></rect>
+            <text x="75" y="15" text-anchor="middle" font-size="14">Score</text>
+            <text x="75" y="40" text-anchor="middle" font-size="25" class="score">0</text>
+        </g>
+    </svg>
+</div>
 <div id="game-wrapper">
     <div class="square-bg grid">
         <div id="grid-row-0" class="grid-row">
@@ -42,6 +50,7 @@
 </div>
 <div class="tile-overlay">
 </div>
+<script type="application/javascript" src="js/foreach-polyfill.js"></script>
 <script type="application/javascript" src="js/main.js"></script>
 </body>
 </html>

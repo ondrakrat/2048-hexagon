@@ -188,19 +188,38 @@ body {
         animation: fadein 1s;
       }
     }
+
+    &.top-wrapper {
+      margin: auto;
+      padding-bottom: 20px;
+      display: block;
+      width: 500px;
+      height: 50px;
+
+      svg {
+
+        rect {
+          fill: darken(@bg-colour, 30%);
+        }
+
+        text {
+          fill: #fff;
+        }
+      }
+    }
   }
 
   #newgame {
     background-color: darken(@bg-colour, 30%);
     color: #fff;
     border: none;
-    height: 35px;
-    width: 100px;
-    border-radius: 3px;
-    font-size: 14px;
+    height: 50px;
+    width: 150px;
+    border-radius: 5px;
+    font-size: 20px;
     cursor: pointer;
     display: block;
-    margin: 10px auto;
+    float: right;
   }
 
   @keyframes fadein {

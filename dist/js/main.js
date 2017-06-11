@@ -3520,6 +3520,7 @@ var GameState = function () {
         this.grid = null;
         this.started = false;
         this.movedThisTurn = false;
+        this.score = 0;
     }
 
     _createClass(GameState, [{
@@ -3537,6 +3538,7 @@ var GameState = function () {
             document.querySelector('.tile-overlay').style.opacity = 1;
             this.movedThisTurn = false;
             this.started = true;
+            this.score = 0;
         }
     }, {
         key: 'gameOver',
@@ -3578,6 +3580,7 @@ var GameState = function () {
                     this._checkGameOver();
                 }
             }
+            document.querySelector('svg text.score').textContent = this.score;
             this._deleteMergedFlag();
         }
     }, {
@@ -3608,7 +3611,7 @@ var GameState = function () {
                         if (endPosition > 0 && !!row[endPosition - 1] && row[endPosition - 1].value === _tile.value && !row[endPosition - 1].justMerged) {
                             // check for mergeable tile
                             _tile.moveToPosition(false, i, endPosition - 1);
-                            row[endPosition - 1].merge(_tile);
+                            this.score += row[endPosition - 1].merge(_tile);
                             row[j] = null;
                             this.movedThisTurn = true;
                             continue;
@@ -3640,7 +3643,7 @@ var GameState = function () {
                         }
                         if (endPosition < row.length - 1 && !!row[endPosition + 1] && row[endPosition + 1].value === tile.value && !row[endPosition + 1].justMerged) {
                             tile.moveToPosition(false, i, endPosition + 1);
-                            row[endPosition + 1].merge(tile);
+                            this.score += row[endPosition + 1].merge(tile);
                             row[j] = null;
                             this.movedThisTurn = true;
                             continue;
@@ -3702,7 +3705,7 @@ var GameState = function () {
                     if (endPositionIndex > 0 && !!this.grid[row[endPositionIndex - 1].row][row[endPositionIndex - 1].column] && this.grid[row[endPositionIndex - 1].row][row[endPositionIndex - 1].column].value === tile.value && !this.grid[row[endPositionIndex - 1].row][row[endPositionIndex - 1].column].justMerged) {
                         var _endPosition = row[endPositionIndex - 1];
                         tile.moveToPosition(false, _endPosition.row, _endPosition.column);
-                        this.grid[_endPosition.row][_endPosition.column].merge(tile);
+                        this.score += this.grid[_endPosition.row][_endPosition.column].merge(tile);
                         this.grid[position.row][position.column] = null;
                         this.movedThisTurn = true;
                         continue;
@@ -3732,7 +3735,7 @@ var GameState = function () {
                     if (endPositionIndex < row.length - 1 && !!this.grid[row[endPositionIndex + 1].row][row[endPositionIndex + 1].column] && this.grid[row[endPositionIndex + 1].row][row[endPositionIndex + 1].column].value === tile.value && !this.grid[row[endPositionIndex + 1].row][row[endPositionIndex + 1].column].justMerged) {
                         var _endPosition2 = row[endPositionIndex + 1];
                         tile.moveToPosition(false, _endPosition2.row, _endPosition2.column);
-                        this.grid[_endPosition2.row][_endPosition2.column].merge(tile);
+                        this.score += this.grid[_endPosition2.row][_endPosition2.column].merge(tile);
                         this.grid[position.row][position.column] = null;
                         this.movedThisTurn = true;
                         continue;
@@ -3941,6 +3944,7 @@ var Tile = function () {
             } else if (this.value > 8192) {
                 this.element.style.fontSize = '35px';
             }
+            return this.value; // score increment
         }
     }, {
         key: 'compare',

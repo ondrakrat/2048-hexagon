@@ -38,6 +38,7 @@ export default class Tile {
         } else if (this.value > 8192) {
             this.element.style.fontSize = '35px';
         }
+        return this.value;  // score increment
     }
 
     compare(position) {

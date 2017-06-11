@@ -174,17 +174,30 @@ body div#game-wrapper #game-over-overlay div {
   position: relative;
   top: 46.5%;
 }
+body div.top-wrapper {
+  margin: auto;
+  padding-bottom: 20px;
+  display: block;
+  width: 500px;
+  height: 50px;
+}
+body div.top-wrapper svg rect {
+  fill: #716051;
+}
+body div.top-wrapper svg text {
+  fill: #fff;
+}
 body #newgame {
   background-color: #716051;
   color: #fff;
   border: none;
-  height: 35px;
-  width: 100px;
-  border-radius: 3px;
-  font-size: 14px;
+  height: 50px;
+  width: 150px;
+  border-radius: 5px;
+  font-size: 20px;
   cursor: pointer;
   display: block;
-  margin: 10px auto;
+  float: right;
 }
 @keyframes fadein {
   from {

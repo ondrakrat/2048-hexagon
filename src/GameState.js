@@ -12,6 +12,7 @@ export default class GameState {
         this.grid = null;
         this.started = false;
         this.movedThisTurn = false;
+        this.score = 0;
     }
 
     newGame() {
@@ -26,6 +27,7 @@ export default class GameState {
         document.querySelector('.tile-overlay').style.opacity = 1;
         this.movedThisTurn = false;
         this.started = true;
+        this.score = 0;
     }
 
     gameOver() {
@@ -65,6 +67,7 @@ export default class GameState {
                 this._checkGameOver();
             }
         }
+        document.querySelector('svg text.score').textContent = this.score;
         this._deleteMergedFlag();
     }
 
@@ -91,7 +94,7 @@ export default class GameState {
                     if (endPosition > 0 && !!row[endPosition - 1]
                         && row[endPosition - 1].value === tile.value && !row[endPosition - 1].justMerged) { // check for mergeable tile
                         tile.moveToPosition(false, i, endPosition - 1);
-                        row[endPosition - 1].merge(tile);
+                        this.score += row[endPosition - 1].merge(tile);
                         row[j] = null;
                         this.movedThisTurn = true;
                         continue;
@@ -122,7 +125,7 @@ export default class GameState {
                     if (endPosition < row.length - 1 && !!row[endPosition + 1]
                         && row[endPosition + 1].value === tile.value && !row[endPosition + 1].justMerged) {
                         tile.moveToPosition(false, i, endPosition + 1);
-                        row[endPosition + 1].merge(tile);
+                        this.score += row[endPosition + 1].merge(tile);
                         row[j] = null;
                         this.movedThisTurn = true;
                         continue;
@@ -183,7 +186,7 @@ export default class GameState {
                     && !this.grid[row[endPositionIndex - 1].row][row[endPositionIndex - 1].column].justMerged) {
                     const endPosition = row[endPositionIndex - 1];
                     tile.moveToPosition(false, endPosition.row, endPosition.column);
-                    this.grid[endPosition.row][endPosition.column].merge(tile);
+                    this.score += this.grid[endPosition.row][endPosition.column].merge(tile);
                     this.grid[position.row][position.column] = null;
                     this.movedThisTurn = true;
                     continue;
@@ -216,7 +219,7 @@ export default class GameState {
                     && !this.grid[row[endPositionIndex + 1].row][row[endPositionIndex + 1].column].justMerged) {
                     const endPosition = row[endPositionIndex + 1];
                     tile.moveToPosition(false, endPosition.row, endPosition.column);
-                    this.grid[endPosition.row][endPosition.column].merge(tile);
+                    this.score += this.grid[endPosition.row][endPosition.column].merge(tile);
                     this.grid[position.row][position.column] = null;
                     this.movedThisTurn = true;
                     continue;
