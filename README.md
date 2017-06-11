@@ -28,5 +28,6 @@ The files are ordered in a standard way into following structure:
     * ```/css``` - LESS source files are located in the ```/less``` subfolder and are compiled 
     into the ```/build``` subfolder as .css files
     * ```/js``` - transpiled JavaScript files by babel
+    * ```/sound``` - sound files
     * ```index.html``` - the page with the application
 * ```/src``` - JavaScript source files in the ES6 syntax

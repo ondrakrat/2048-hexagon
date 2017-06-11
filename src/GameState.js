@@ -34,9 +34,13 @@ export default class GameState {
         this.started = true;
         this.score = 0;
         document.querySelector('svg text.score').textContent = this.score;
+        const newGameSound = new Audio('../dist/sound/new_game_sound.wav');
+        newGameSound.play();
     }
 
     gameOver() {
+        const gameOverSound = new Audio('../dist/sound/game_over_sound.wav');
+        gameOverSound.play();
         document.querySelector('.tile-overlay').style.opacity = 0.1;
         document.querySelector('#game-over-overlay').style.display = 'block';
         this.started = false;
