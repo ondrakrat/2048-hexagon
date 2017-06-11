@@ -16,6 +16,10 @@
 
 body {
 
+  h1 {
+    text-align: center;
+  }
+
   div {
 
     &.cb {
@@ -217,17 +221,22 @@ body {
         }
       }
     }
+  }
 
-    &.right-bar {
-      float: right;
-      margin-right: 25px;
-      margin-left: 25px;
+  aside.right-bar {
+    position: fixed;
+    left: 80%;
 
-      #music {
-        div {
-          font-size: 16px;
-          margin-bottom: 10px;
-        }
+    section {
+      max-width: 90%;
+    }
+
+    #music {
+      margin-top: 50px;
+
+      div {
+        font-size: 16px;
+        margin-bottom: 10px;
       }
     }
   }

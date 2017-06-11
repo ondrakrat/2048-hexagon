@@ -1,3 +1,6 @@
+body h1 {
+  text-align: center;
+}
 body div.cb {
   clear: both;
 }
@@ -194,12 +197,17 @@ body div.top-wrapper svg g rect {
 body div.top-wrapper svg g text {
   fill: #fff;
 }
-body div.right-bar {
-  float: right;
-  margin-right: 25px;
-  margin-left: 25px;
+body aside.right-bar {
+  position: fixed;
+  left: 80%;
 }
-body div.right-bar #music div {
+body aside.right-bar section {
+  max-width: 90%;
+}
+body aside.right-bar #music {
+  margin-top: 50px;
+}
+body aside.right-bar #music div {
   font-size: 16px;
   margin-bottom: 10px;
 }
