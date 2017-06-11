@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 body {
   font-family: 'Open Sans', sans-serif;
+  background-color: #faf8ef;
 }
 body h1 {
   text-align: center;
@@ -214,8 +215,18 @@ body aside.right-bar {
   position: fixed;
   left: 80%;
 }
+@media (max-width: 899px) {
+  body aside.right-bar {
+    display: none;
+  }
+}
 body aside.right-bar section {
   max-width: 90%;
+}
+@media (max-width: 1499px) {
+  body aside.right-bar section {
+    max-width: 50%;
+  }
 }
 body aside.right-bar #music {
   margin-top: 50px;
