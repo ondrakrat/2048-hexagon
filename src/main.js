@@ -1,4 +1,5 @@
 import 'babel-polyfill';
+import 'foreach-polyfill';
 import GameState from './GameState';
 import {Direction} from "./constants";
 
