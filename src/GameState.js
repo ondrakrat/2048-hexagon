@@ -23,12 +23,14 @@ export default class GameState {
             }
             this.setTile(position, new Tile(NEW_TILE_VALUE, position));
         }
+        document.querySelector('.tile-overlay').style.opacity = 1;
         this.movedThisTurn = false;
         this.started = true;
     }
 
     gameOver() {
-        alert('Game over');
+        document.querySelector('.tile-overlay').style.opacity = 0.1;
+        document.querySelector('#game-over-overlay').style.display = 'block';
         this.started = false;
     }
 

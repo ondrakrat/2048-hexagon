@@ -197,13 +197,15 @@ var GameState = function () {
                 }
                 this.setTile(position, new _Tile2.default(_constants.NEW_TILE_VALUE, position));
             }
+            document.querySelector('.tile-overlay').style.opacity = 1;
             this.movedThisTurn = false;
             this.started = true;
         }
     }, {
         key: 'gameOver',
         value: function gameOver() {
-            alert('Game over');
+            document.querySelector('.tile-overlay').style.opacity = 0.1;
+            document.querySelector('#game-over-overlay').style.display = 'block';
             this.started = false;
         }
     }, {
@@ -475,7 +477,6 @@ var GameState = function () {
                 for (var i = 0; i < row.length; ++i) {
                     if (!row[i] || row[i].value === lastValue) {
                         // check if right/left movement is possible
-                        console.log('Movement found horizontally', row[i].position);
                         canMove = true;
                         return;
                     }
@@ -488,7 +489,6 @@ var GameState = function () {
                     var tile = _this.grid[row[i].row][row[i].column];
                     if (!tile || tile.value === lastValue) {
                         // check if main diagonal movement is possible
-                        console.log('Movement found on main diagonal', tile.position);
                         canMove = true;
                         return;
                     }
@@ -501,14 +501,12 @@ var GameState = function () {
                     var tile = _this.grid[row[i].row][row[i].column];
                     if (!tile || tile.value === lastValue) {
                         // check if anti diagonal movement is possible
-                        console.log('Movement found on anti diagonal', tile.position);
                         canMove = true;
                         return;
                     }
                     lastValue = tile.value;
                 }
             });
-            console.log('All checks failed, canMove: ' + canMove);
             if (!canMove) {
                 this.gameOver();
             }
@@ -648,6 +646,7 @@ var game = new _GameState2.default();
 // start game handler
 document.querySelector('#newgame').addEventListener('click', function (e) {
     e.preventDefault();
+    document.querySelector('#game-over-overlay').style.display = 'none';
     game.newGame();
 });
 

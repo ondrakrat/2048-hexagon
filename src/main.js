@@ -6,6 +6,7 @@ const game = new GameState();
 // start game handler
 document.querySelector('#newgame').addEventListener('click', (e) => {
     e.preventDefault();
+    document.querySelector('#game-over-overlay').style.display = 'none';
     game.newGame();
 });
 
