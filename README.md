@@ -10,9 +10,11 @@ The goal of the game is to merge tiles with the same value in order to create a 
 with the value of 2048 (or the highest power of two you can get). 
 
 The tiles can be moved with numpad keys 4 and 6 for horizontal movement, and 1, 3, 7 and 9 for 
- vertical diagonal movement, respectively. After every move, one or two tiles are generated 
- at random positions of the grid with value of 2 or 4. The game can be (re)started with the 
-'New game' button, and if there are no valid moves to be done, the game ends.
+ vertical diagonal movement, respectively. For users without numeric keyboard, the tiles can 
+ be controlled alternatively with Q, E, A, D, Y and C keys. After every move, one or two tiles 
+ are generated at random positions of the grid with value of 2 or 4. The game can be 
+ (re)started with the 'New game' button, and if there are no valid moves to be done, the game 
+ ends.
 
 ## Compilation, project structure
 The JavaScript source files are written in ES6 syntax, and are transpiled via 
