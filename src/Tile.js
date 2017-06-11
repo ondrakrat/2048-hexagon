@@ -27,7 +27,11 @@ export default class Tile {
     merge(other) {
         this.element.classList.remove(`tile-${this.value}`);
         this.value *= 2;
-        this.element.classList.add(`tile-${this.value}`);
+        if (this.value > 2048) {
+            this.element.classList.add('tile-high');
+        } else {
+            this.element.classList.add(`tile-${this.value}`);
+        }
         this.element.innerHTML = this.value;
         this.justMerged = true;
         // delete the other tile that was merged into this one

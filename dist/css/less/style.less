@@ -12,6 +12,7 @@
 @512-colour: rgb(237, 200, 80);
 @1024-colour: rgb(237, 197, 63);
 @2048-colour: rgb(237, 194, 46);
+@high-colour: rgb(60, 58, 50);
 
 body {
 
@@ -142,6 +143,11 @@ body {
         background: @@variable-name;
       }
       .generate-tile-classes(@n, (@i * 2));
+    }
+
+    .tile-high {
+      background: @high-colour;
+      color: #fff;
     }
 
     &.tile-overlay {
